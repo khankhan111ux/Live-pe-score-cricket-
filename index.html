@@ -3,31 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live Pe Score - LIVE</title>
+<title>Live Pe Score - Pishin</title>
 <style>
-body{margin:0;font-family:system-ui;background:#0f172a;color:white;text-align:center}
-.header{background:#16a34a;padding:18px;font-size:24px;font-weight:bold}
-.card{background:#1e293b;margin:15px;border-radius:15px;padding:20px}
-.btn{display:block;padding:18px;border-radius:12px;text-decoration:none;font-weight:bold;font-size:18px;margin:12px 0}
+body{margin:0;background:#0a1a0f;color:white;font-family:system-ui}
+.header{background:#16a34a;padding:12px;text-align:center;font-weight:bold;font-size:20px}
+/* YE HAI AAPKA BAR */
+.score-bar{
+display:flex;align-items:center;
+background:linear-gradient(90deg,#000 0%,#1a1a1a 50%,#000 100%);
+border-left:5px solid #22c55e;
+border-right:5px solid #22c55e;
+margin:10px;border-radius:8px;overflow:hidden;
+font-weight:bold;
+}
+.live-dot{background:#ff0000;color:white;padding:18px 15px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0.5}}
+.team{padding:12px 15px;flex:1}
+.score{font-size:28px;padding:10px 20px;background:#111;text-align:center}
+.need{background:#22c55e;color:black;padding:12px 15px;text-align:center}
+.btn{display:block;margin:12px;padding:16px;border-radius:10px;text-align:center;text-decoration:none;font-weight:bold}
 .b1{background:#22c55e;color:black}
-.b2{background:#3b82f6;color:white}
-.b3{background:#ef4444;color:white}
-.small{color:#94a3b8;font-size:13px;margin-top:15px}
+.b2{background:#1877F2;color:white}
 </style>
 </head>
 <body>
-<div class="header">🏏 Live Pe Score - LIVE ● Pishin</div>
+<div class="header">🏏 Live Pe Score - PISHIN LIVE</div>
 
-<div class="card">
-<h2>🔴 LIVE Matches</h2>
-<p>Neeche kisi bhi button par click karo - Live score khul jayega</p>
-
-<a class="btn b1" href="https://m.cricbuzz.com/cricket-match/live-scores" target="_blank">🏏 Cricbuzz LIVE - Best</a>
-<a class="btn b2" href="https://www.espncricinfo.com/ci/engine/match/index.html?view=live" target="_blank">📊 ESPN Cricinfo LIVE</a>
-<a class="btn b3" href="https://www.youtube.com/results?search_query=live+cricket+match+today" target="_blank">▶️ YouTube Live Matches</a>
-
-<div class="small">Made with ❤️ in Pishin, Balochistan<br>by khankhan111ux<br><br>✅ 100% Working - No Cookie Error</div>
+<!-- AAPKA LIVE BAR -->
+<div class="score-bar">
+<div class="live-dot">● LIVE</div>
+<div class="team" id="t1">PISHIN ZALMI</div>
+<div class="score"><span id="s1">85/3</span><br><small style="color:#22c55e;font-size:14px" id="ov">10.2 OV</small></div>
+<div class="team" id="t2">QUETTA STARS</div>
+<div class="need"><span id="need">NEED 20 RUNS</span><br><small id="balls">IN 58 BALLS</small></div>
 </div>
 
+<div style="padding:12px">
+<a class="btn b1" href="admin.html">⚙️ Score Update Karo - Admin</a>
+<a class="btn b2" href="https://www.facebook.com/live/create" target="_blank">📘 Facebook Par Live Jao</a>
+<a class="btn" style="background:#333;color:white" href="https://m.cricbuzz.com" target="_blank">🌍 International Live</a>
+<p style="text-align:center;color:gray;font-size:12px">Made in Pishin, Balochistan</p>
+</div>
+
+<script>
+function load(){
+let s1=localStorage.getItem('live_s1')||'85/3';
+let t1=localStorage.getItem('live_t1')||'PISHIN ZALMI';
+let t2=localStorage.getItem('live_t2')||'QUETTA STARS';
+let info=localStorage.getItem('live_info')||'NEED 20 RUNS';
+document.getElementById('s1').innerText=s1;
+document.getElementById('t1').innerText=t1;
+document.getElementById('t2').innerText=t2;
+document.getElementById('need').innerText=info;
+}
+load(); setInterval(load,2000);
+</script>
 </body>
 </html>
