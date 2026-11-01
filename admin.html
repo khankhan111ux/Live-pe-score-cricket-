@@ -1,1 +1,89 @@
-<!DOCTYPE html><html><head><meta name=viewport content="width=device-width,initial-scale=1"><title>Admin</title><style>body{background:#0f172a;color:#fff;padding:12px;font-family:sans-serif}input{width:90%;padding:12px;margin:5px;border-radius:8px;border:0}.full{width:92%}button{width:95%;padding:14px;background:#22c55e;color:#000;font-weight:bold;border-radius:10px;border:0;margin-top:10px}</style></head><body><h2>🏏 Match Add Karo</h2><input id=t1 class=full placeholder="Team 1: Pishin Zalmi"><input id=t2 class=full placeholder="Team 2: Quetta Stars"><input id=st placeholder="Striker: Babar"><input id=st_run placeholder="Run: 45*"><input id=nst placeholder="Non-Striker: Rizwan"><input id=nst_run placeholder="Run: 20"><input id=bw placeholder="Bowler: Naseem"><input id=bw_run placeholder="2/18"><input id=score class=full placeholder="Score: 85/3 (10.2)"><input id=need class=full placeholder="Need: 20 RUNS IN 58 BALLS"><button onclick="save()">LIVE UPDATE KARO</button><p><a href=index.html style=color:#22c55e>→ Live Dekho</a></p><script>function save(){let m={t1:t1.value,t2:t2.value,st:st.value,st_run:st_run.value,nst:nst.value,nst_run:nst_run.value,bw:bw.value,bw_run:bw_run.value,score:score.value,need:need.value};localStorage.setItem('pishin_current',JSON.stringify(m));alert('LIVE Ho Gaya! Ab Live Dekho dabao');}</script></body></html>
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cric11 Scoring</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial;background:#f1f5f9}
+.header{background:#1e3a8a;color:#fff;padding:12px;display:flex;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:8px;padding:8px;background:#fff}
+.tab{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:bold}
+.active{background:#facc15;color:#000}
+.score-head{background:#fff;padding:10px;display:flex;justify-content:space-between;border-bottom:1px solid #ddd}
+.need{background:#fff;padding:8px 10px;font-size:13px;font-weight:bold;color:#1e3a8a}
+.table{width:100%;background:#fff;border-collapse:collapse;font-size:13px}
+.table th{background:#f8fafc;padding:8px 4px;text-align:left;color:#64748b}
+.table td{padding:8px 4px;border-top:1px solid #eee}
+.bowler{margin-top:8px}
+.thisover{background:#fff;margin-top:8px;padding:10px;display:flex;gap:6px;align-items:center}
+.ball{width:26px;height:26px;border-radius:50%;background:#16a34a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold}
+.controls{background:#fff;margin-top:8px;padding:12px;border-radius:12px}
+.row{display:flex;gap:8px;margin-bottom:8px}
+.btn{flex:1;padding:14px;border-radius:30px;border:0;font-weight:bold;font-size:15px}
+.g{background:#16a34a;color:#fff}.y{background:#facc15;color:#000}.b{background:#64748b;color:#fff}.r{background:#dc2626;color:#fff}
+input{width:100%;padding:8px;margin:4px 0;border:1px solid #ccc;border-radius:6px}
+</style></head><body>
+<div class="header"><span id="tname">Zalzia Club vs FM Shah</span><span>⚙️</span></div>
+<div class="tabs"><span class="tab active">Live Score</span><span class="tab">Scoreboard</span><span class="tab">Overs</span></div>
+<div class="score-head"><b id="sc">0/0 (0.0)</b><span id="crr">CRR 0.0</span></div>
+<div class="need" id="need">Start Match - Enter Teams</div>
+
+<div style="background:#fff;padding:10px">
+<div style="display:flex;gap:6px"><input id="team1" placeholder="Team 1" value="Pishin Zalmi"><input id="team2" placeholder="Team 2" value="Quetta"></div>
+<div style="display:flex;gap:6px;margin-top:6px"><input id="striker" placeholder="Striker"><input id="nonstr" placeholder="Non-Striker"><input id="bowler" placeholder="Bowler"></div>
+<button onclick="start()" style="width:100%;padding:10px;background:#1e3a8a;color:#fff;border:0;border-radius:8px;margin-top:6px">Start / Update Teams</button>
+</div>
+
+<table class="table"><thead><tr><th>Batsman</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr></thead>
+<tbody id="batBody"></tbody></table>
+<table class="table bowler"><thead><tr><th>Bowler</th><th>O</th><th>M</th><th>R</th><th>W</th><th>ECO</th></tr></thead>
+<tbody id="bowlBody"></tbody></table>
+
+<div class="thisover">This over <span id="overBalls" style="display:flex;gap:4px"></span></div>
+
+<div class="controls">
+<div class="row"><button class="btn g" onclick="run(0)">0</button><button class="btn g" onclick="run(1)">1</button><button class="btn g" onclick="run(2)">2</button><button class="btn y" onclick="more()">More</button><button class="btn y" onclick="undo()">UNDO</button></div>
+<div class="row"><button class="btn g" onclick="run(3)">3</button><button class="btn g" onclick="run(4)">4</button><button class="btn g" onclick="run(6)">6</button><button class="btn y">5,7 OTH</button><button class="btn y" onclick="swap()">SWAP</button></div>
+<div class="row"><button class="btn b" onclick="extra('WD')">WD</button><button class="btn b" onclick="extra('NB')">NB</button><button class="btn b" onclick="extra('LB')">LB</button><button class="btn b" onclick="extra('BYE')">BYE</button><button class="btn r" onclick="wicket()">OUT</button></div>
+<a href="index.html" style="display:block;text-align:center;margin-top:10px;color:#1e3a8a;font-weight:bold">👁️ LIVE VIEW LINK DEKHO</a>
+</div>
+
+<script>
+let data={score:0,wicket:0,balls:0,striker:{name:'Kashif*',r:0,b:0,f4:0,s6:0},nonstr:{name:'Manzoor',r:0,b:0,f4:0,s6:0},bowler:{name:'Saleem',o:0,b:0,r:0,w:0},over:[],history:[]};
+function start(){
+data.striker.name=document.getElementById('striker').value||'Kashif*';
+data.nonstr.name=document.getElementById('nonstr').value||'Manzoor';
+data.bowler.name=document.getElementById('bowler').value||'Saleem';
+data.team1=document.getElementById('team1').value;data.team2=document.getElementById('team2').value;
+save();render();
+}
+function save(){localStorage.setItem('cric11',JSON.stringify(data));}
+function render(){
+let ov=Math.floor(data.balls/6)+'.'+(data.balls%6);
+document.getElementById('sc').innerText=data.score+'/'+data.wicket+' ('+ov+')';
+document.getElementById('tname').innerText=(data.team1||'Team1')+' vs '+(data.team2||'Team2');
+document.getElementById('need').innerText=(data.team2||'Opp')+' need '+(200-data.score)+' runs';
+document.getElementById('batBody').innerHTML=`<tr><td>${data.striker.name}</td><td>${data.striker.r}</td><td>${data.striker.b}</td><td>${data.striker.f4}</td><td>${data.striker.s6}</td><td>${(data.striker.b?((data.striker.r/data.striker.b)*100).toFixed(1):0)}</td></tr><tr><td>${data.nonstr.name}</td><td>${data.nonstr.r}</td><td>${data.nonstr.b}</td><td>${data.nonstr.f4}</td><td>${data.nonstr.s6}</td><td>${(data.nonstr.b?((data.nonstr.r/data.nonstr.b)*100).toFixed(1):0)}</td></tr>`;
+document.getElementById('bowlBody').innerHTML=`<tr><td>${data.bowler.name}</td><td>${Math.floor(data.bowler.b/6)+'.'+(data.bowler.b%6)}</td><td>0</td><td>${data.bowler.r}</td><td>${data.bowler.w}</td><td>${(data.bowler.b?((data.bowler.r/(data.bowler.b/6)).toFixed(1)):0)}</td></tr>`;
+document.getElementById('overBalls').innerHTML=data.over.map(x=>`<span class="ball">${x}</span>`).join('');
+}
+function run(r){
+data.history.push(JSON.parse(JSON.stringify(data)));
+data.score+=r;data.striker.r+=r;data.striker.b++;data.bowler.r+=r;data.bowler.b++;data.balls++;data.over.push(r);
+if(r==4)data.striker.f4++;if(r==6)data.striker.s6++;
+if(r%2==1)swap(false);if(data.balls%6==0)data.over=[];
+save();render();
+}
+function swap(doSave=true){
+if(doSave)data.history.push(JSON.parse(JSON.stringify(data)));
+let t=data.striker;data.striker=data.nonstr;data.nonstr=t;save();render();
+}
+function extra(t){run(1);}
+function wicket(){
+let name=prompt('New Batsman Name?');
+if(!name)return;
+data.history.push(JSON.parse(JSON.stringify(data)));
+data.wicket++;data.bowler.w++;data.bowler.b++;data.balls++;data.over.push('W');
+data.striker={name:name,r:0,b:0,f4:0,s6:0};data.over=[];save();render();
+}
+function undo(){if(data.history.length){data=data.history.pop();save();render();}}
+let old=localStorage.getItem('cric11');if(old){data=JSON.parse(old);render();}
+</script></body></html>
