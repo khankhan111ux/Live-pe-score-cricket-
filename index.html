@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live Pe Score</title>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Score</title>
 <style>
-body{margin:0;background:#020a03;color:white;font-family:sans-serif}
-.header{background:#16a34a;padding:10px;text-align:center;font-weight:bold}
-.score-bar{display:flex;background:#000;border-left:5px solid #22c55e;margin:10px;border-radius:8px;overflow:hidden}
-.live{background:red;padding:15px 8px;font-weight:bold}
-.card{background:#111;border:1px solid #22c55e;border-radius:10px;margin:10px;padding:12px}
-.row{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #222}
-.row b{color:#22c55e}
-</style>
-</head>
-<body>
-<div class="header">🏏 PISHIN LIVE SCORE</div>
-<div id="main"></div>
-<div style="padding:10px"><a href="admin.html" style="display:block;background:#22c55e;color:black;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:bold">⚙️ Admin - Striker/Bowler Update</a></div>
+body{margin:0;background:transparent;font-family:Arial}
+.bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,#0f172a,#1e3a8a);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;border-top:3px solid #facc15}
+.score{font-size:28px;font-weight:900}.need{margin-left:auto;background:#facc15;color:#000;padding:6px 12px;border-radius:20px;font-weight:900;font-size:13px}
+.small{font-size:11px;color:#94a3b8}
+.toss{position:fixed;top:10px;left:10px;background:#000;color:#facc15;padding:6px 10px;border-radius:20px;font-size:11px;border:1px solid #facc15}
+</style></head><body>
+<div class="toss" id="toss">Toss: -</div>
+<div class="bar">
+<div><div class="score" id="score">0/0 (0.0)</div><div class="small" id="teams">Pishin Live</div></div>
+<div class="need" id="need">1st Innings</div>
+</div>
 <script>
 function load(){
-let m=JSON.parse(localStorage.getItem('pishin_current')||'null');
-let box=document.getElementById('main');
-if(!m){box.innerHTML='<p style="text-align:center;color:gray;margin-top:60px">Koi Match Nahi<br>Admin me Striker Add Karo</p>';return;}
-box.innerHTML=`<div class="score-bar"><div class="live">● LIVE</div><div style="padding:10px;flex:1"><div>${m.t1} vs ${m.t2}</div><div style="font-size:22px">${m.score}</div></div><div style="background:#22c55e;color:#000;padding:12px;text-align:center">${m.need}</div></div><div class="card"><div class="row"><span>Striker: <b style="color:#facc15">${m.striker} *</b></span><span><b>${m.striker_run}</b></span></div><div class="row"><span>Non-Striker: ${m.nonstriker}</span><span><b>${m.nonstriker_run}</b></span></div><div class="row"><span>Bowler: ${m.bowler}</span><span><b>${m.bowler_fig}</b></span></div><div class="row" style="border:0"><span>Status:</span><span style="color:#22c55e">${m.status}</span></div></div>`;
+ try{
+  let d=JSON.parse(localStorage.getItem('live_score')||localStorage.getItem('cric11_final')||'{}');
+  if(!d.sc && d.score!==undefined) d.sc=d.score;
+  if(d.sc!==undefined){
+   let ov=d.over || Math.floor((d.ball||0)/6)+'.'+(d.ball||0)%6;
+   document.getElementById('score').innerText=(d.sc||d.score)+' / '+(d.wk||0)+' ('+ov+' / '+(d.totalOvers||d.tOvers||10)+')';
+   document.getElementById('need').innerText=d.need || 'Live';
+   document.getElementById('teams').innerText=(d.teams || '')+' | This Over: '+(d.thisOver||d.over||[]).join(' ');
+   document.getElementById('toss').innerText=d.toss || 'Live Score';
+  }
+ }catch(e){}
 }
-load();setInterval(load,2000);
-</script>
-</body>
-</html>
+setInterval(load,1000); load();
+</script></body></html>
