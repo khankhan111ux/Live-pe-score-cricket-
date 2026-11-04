@@ -1,136 +1,99 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PISHIN LIVE - Fixed</title>
-<style>body{font-family:Arial;background:#f1f5f9;margin:0}.header{background:#1e3a8a;color:#fff;padding:14px;text-align:center;font-weight:900}.card{background:#fff;margin:10px;border-radius:12px;padding:14px;box-shadow:0 2px 6px #0001} input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #cbd5e1} .row{display:flex;gap:8px}.btn{flex:1;padding:14px;border:0;border-radius:30px;font-weight:900}.scoreBtn{width:72px;height:72px;border-radius:50%;border:0;font-weight:900;font-size:18px;margin:5px}.green{background:#16a34a;color:#fff}.yellow{background:#facc15;color:#000}.red{background:#dc2626;color:#fff}.b{background:#1e3a8a;color:#fff}</style></head><body>
-<div class="header">🏏 PISHIN LIVE - Cric11 Clone</div>
-<div id="p1" class="card"><label>HOST TEAM</label><input id="t1" value="Shaheen Club"><label>VISITOR TEAM</label><input id="t2" value="B Z G CLUB"><label>OVERS</label><div class="row"><button class="btn" onclick="ch('ov',-1)">-</button><input id="ov" value="1" style="text-align:center"><button class="btn" onclick="ch('ov',1)">+</button></div><label>PLAYERS</label><div class="row"><button class="btn" onclick="ch('pl',-1)">-</button><input id="pl" value="11" style="text-align:center"><button class="btn" onclick="ch('pl',1)">+</button></div><button class="btn b" style="width:100%" onclick="goToss()">Next - Toss</button></div>
-<div id="p2" class="card" style="display:none"><h3>TOSS</h3><label>Who won toss?</label><select id="tossWon"></select><label>Elected</label><select id="elected"><option>Bat</option><option>Bowl</option></select><button class="btn b" style="width:100%" onclick="startM()">Start Match</button></div>
-<div id="p3" class="card" style="display:none"><input id="s1" placeholder="Striker Name" value="Waqas"><input id="s2" placeholder="Non-Striker Name" value="Khalid"><input id="bw" placeholder="Bowler Name" value="M Tanveer"><button class="btn b" style="width:100%" onclick="startS()">Start Scoring</button></div>
-<div id="p4" style="display:none"><div class="card"><div id="mainScore" style="font-size:28px;font-weight:900;text-align:center">0/0 (0.0/1)</div><div id="need" style="text-align:center;color:#1e3a8a;font-weight:900;margin-top:4px"></div><div id="overInfo" style="font-size:12px;color:#64748b;margin-top:8px;word-break:break-all"></div></div>
-<div class="card" style="text-align:center"><div><button class="scoreBtn green" onclick="run(0)">0</button><button class="scoreBtn green" onclick="run(1)">1</button><button class="scoreBtn green" onclick="run(2)">2</button><button class="scoreBtn yellow" onclick="undo()">UNDO</button></div><div><button class="scoreBtn green" onclick="run(3)">3</button><button class="scoreBtn green" onclick="run(4)">4</button><button class="scoreBtn green" onclick="run(6)">6</button><button class="scoreBtn yellow" onclick="swap()">SWAP</button></div><div><button class="scoreBtn yellow" onclick="wide()">WD</button><button class="scoreBtn yellow" onclick="noBall()">NB</button><button class="scoreBtn yellow" onclick="extra('LB')">LB</button><button class="scoreBtn yellow" onclick="extra('BYE')">BYE</button></div><div><button class="scoreBtn red" style="width:120px" onclick="wicket()">OUT</button></div><button class="btn b" style="width:100%;margin-top:12px" onclick="endIn()">End Innings / Super Over</button><button class="btn" style="width:100%;margin-top:8px;background:#000;color:#fff" onclick="resetAll()">RESET MATCH</button></div></div>
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pishin Falcons - Live Scoring</title>
+<style>
+body{font-family:sans-serif;background:#0f172a;color:white;text-align:center;padding:15px}
+.card{background:white;color:black;border-radius:15px;padding:20px;margin-bottom:15px}
+.score{font-size:50px;font-weight:bold}
+button{font-size:22px;padding:15px;margin:5px;border-radius:12px;border:none;width:70px;cursor:pointer}
+.b4{background:#22c55e;color:white}
+.b6{background:#2563eb;color:white}
+.bW{background:#ef4444;color:white}
+.b0{background:#e2e8f0}
+.save{background:#f59e0b;width:95%;font-weight:bold}
+</style>
+</head>
+<body>
+
+<h2>🏏 Pishin Falcons - Admin Panel</h2>
+<p>بس بٹن دباؤ، سکور خود بن جائے گا</p>
+
+<div class="card">
+<div id="teamName">Pishin Falcons</div>
+<div class="score"><span id="runs">100</span> / <span id="wkts">3</span></div>
+<div>Overs: <span id="overs">12.1</span></div>
+<div style="margin-top:10px">Naseebullah: <span id="p1">43</span>* | Asmatullah: <span id="p2">24</span></div>
+<div style="margin-top:10px">Target: 169 | Need: <span id="need">69</span> runs in <span id="ballsLeft">47</span> balls</div>
+</div>
+
+<div class="card">
+<h3>رنز کا بٹن دباؤ</h3>
+<button class="b0" onclick="add(0)">0</button>
+<button class="b0" onclick="add(1)">1</button>
+<button class="b0" onclick="add(2)">2</button>
+<button class="b0" onclick="add(3)">3</button><br>
+<button class="b4" onclick="add(4)">4</button>
+<button class="b6" onclick="add(6)">6</button>
+<button class="bW" onclick="addW()">W</button><br>
+<button onclick="add(1)">Wide</button>
+<button onclick="add(1)">No Ball</button>
+<button onclick="undo()">↩ واپس</button>
+</div>
+
+<button class="save" onclick="save()">✅ SAVE - سب کو دکھاؤ</button>
+<br><br>
+<button onclick="resetScore()" style="background:#333;color:white;width:95%">نیا میچ شروع کرو</button>
+
 <script>
+let runs=100, wkts=3, balls=73;
+let p1=43, p2=24;
 let history=[];
-let d=JSON.parse(localStorage.getItem('cric11_fixed_v5')||'{"sc":0,"wk":0,"ball":0,"over":[],"tOvers":1,"tPlayers":11,"innings":1,"target":0,"t1":"Shaheen","t2":"BZG","s1":{"n":"Waqas","r":0,"b":0},"s2":{"n":"Khalid","r":0,"b":0}}');
-function ch(id,delta){let el=document.getElementById(id);let v=parseInt(el.value)||1;v+=delta;if(v<1)v=1;if(id=='ov'&&v>50)v=50;if(id=='pl'&&v>28)v=28;el.value=v}
-function goToss(){d.t1=document.getElementById('t1').value||'Team A';d.t2=document.getElementById('t2').value||'Team B';d.tOvers=parseInt(document.getElementById('ov').value);d.tPlayers=parseInt(document.getElementById('pl').value);document.getElementById('tossWon').innerHTML='<option>'+d.t1+'</option><option>'+d.t2+'</option>';document.getElementById('p1').style.display='none';document.getElementById('p2').style.display='block'}
-function startM(){d.tossWon=document.getElementById('tossWon').value;d.elected=document.getElementById('elected').value;document.getElementById('p2').style.display='none';document.getElementById('p3').style.display='block'}
-function startS(){d.s1.n=document.getElementById('s1').value||'Waqas';d.s2.n=document.getElementById('s2').value||'Khalid';d.bowler=document.getElementById('bw').value||'Bowler';d.sc=0;d.wk=0;d.ball=0;d.over=[];d.target=0;d.innings=1;history=[];document.getElementById('p3').style.display='none';document.getElementById('p4').style.display='block';render()}
-function save(){history.push(JSON.stringify(d));if(history.length>20)history.shift();}
-function render(){
- let ov=Math.floor(d.ball/6)+'.'+(d.ball%6);
- if(d.ball>=d.tOvers*6){ ov=d.tOvers+'.0'; }
- document.getElementById('mainScore').innerText=d.sc+'/'+d.wk+' ('+ov+'/'+d.tOvers+')';
- if(d.innings==1){
-   if(d.ball>=d.tOvers*6){ document.getElementById('need').innerText='Innings Complete! End Innings دبائیں'; }
-   else{ document.getElementById('need').innerText='1st Innings | '+d.t1+' Batting'; }
- } else {
-   let need=d.target-d.sc; let balls=(d.tOvers*6)-d.ball;
-   if(need<=0){ document.getElementById('need').innerText='Match Won! 🎉'; }
-   else if(balls<=0){ document.getElementById('need').innerText='Match Lost! All Balls Done'; }
-   else{ document.getElementById('need').innerText=d.t2+' Need '+need+' in '+balls+' balls'; }
- }
- document.getElementById('overInfo').innerText='This Over: '+d.over.join(' ')+' | '+d.s1.n+' '+d.s1.r+'('+d.s1.b+') - '+d.s2.n+' '+d.s2.r+'('+d.s2.b+')';
- localStorage.setItem('cric11_fixed_v5',JSON.stringify(d));
- let live={sc:d.sc,wk:d.wk,ball:d.ball,over:ov,totalOvers:d.tOvers,teams:d.t1+' VS '+d.t2,toss:d.tossWon+' won toss',need:document.getElementById('need').innerText,thisOver:d.over,striker:d.s1};
- localStorage.setItem('live_score',JSON.stringify(live));
+
+function update(){
+  let ov = Math.floor(balls/6) + "." + (balls%6);
+  document.getElementById('runs').innerText=runs;
+  document.getElementById('wkts').innerText=wkts;
+  document.getElementById('overs').innerText=ov;
+  document.getElementById('p1').innerText=p1;
+  document.getElementById('p2').innerText=p2;
+  let need = 169 - runs;
+  let left = 120 - balls;
+  document.getElementById('need').innerText=need;
+  document.getElementById('ballsLeft').innerText=left;
+  localStorage.setItem('liveScore', JSON.stringify({runs,wkts,balls,p1,p2}));
 }
-function run(r){
- if(d.ball>=d.tOvers*6){ alert('اوور ختم ہو گئے! End Innings دبائیں'); return; }
- if(d.wk>=d.tPlayers-1){ alert('All Out! End Innings دبائیں'); return; }
- save(); d.sc+=r; d.ball++; d.over.push(r); d.s1.r+=r; d.s1.b++; if(r%2==1){let t=d.s1;d.s1=d.s2;d.s2=t} render();
+
+function add(r){
+  history.push({runs,wkts,balls,p1,p2});
+  runs+=r; balls+=1; p1+=r;
+  if(r%2==1){ let t=p1; p1=p2; p2=t; }
+  if(balls%6==0){ let t=p1; p1=p2; p2=t; }
+  update();
 }
-function wide(){
- if(d.ball>=d.tOvers*6){ alert('اوور ختم'); return; }
- save(); d.sc+=1; d.over.push('WD'); render();
+function addW(){
+  history.push({runs,wkts,balls,p1,p2});
+  wkts+=1; balls+=1; p1=0;
+  update();
 }
-function noBall(){
- if(d.ball>=d.tOvers*6){ alert('اوور ختم'); return; }
- save(); d.sc+=1; d.over.push('NB'); render();
+function undo(){
+  if(history.length>0){
+    let h=history.pop();
+    runs=h.runs; wkts=h.wkts; balls=h.balls; p1=h.p1; p2=h.p2;
+    update();
+  }
 }
-function extra(t){
- if(d.ball>=d.tOvers*6){ alert('اوور ختم'); return; }
- save(); let r=1; d.sc+=r; d.ball++; d.over.push(t); d.s1.b++; render();
+function save(){
+  update();
+  alert("ہو گیا بھائی! سکور سب کو دکھا دیا: " + runs + "/" + wkts);
 }
-function wicket(){
- if(d.ball>=d.tOvers*6){ alert('اوور ختم'); return; }
- let nb=prompt('New Batsman Name?'); if(!nb) return;
- save(); d.wk++; d.ball++; d.over.push('W'); d.s1={n:nb,r:0,b:0}; render();
+function resetScore(){
+  runs=0; wkts=0; balls=0; p1=0; p2=0; history=[];
+  update();
 }
-function swap(){ save(); let t=d.s1;d.s1=d.s2;d.s2=t; render(); }
-function undo(){ if(history.length==0){alert('کچھ نہیں ہے Undo کے لیے');return;} d=JSON.parse(history.pop()); render(); }
-function endIn(){
- if(d.innings==1){
-  if(d.ball<d.tOvers*6 && !confirm('اوور ابھی باقی ہیں، پھر بھی Innings ختم کرنی ہے؟')) return;
-  d.target=d.sc+1; d.innings=2; d.sc=0; d.wk=0; d.ball=0; d.over=[]; d.s1={n:'Player 1',r:0,b:0}; d.s2={n:'Player 2',r:0,b:0}; alert('2nd Innings Start - Target '+d.target); history=[];
- } else {
-  if(confirm('Tie? Super Over شروع کرنا ہے؟')){d.tOvers=1;d.sc=0;d.wk=0;d.ball=0;d.over=[];d.target=999;alert('Super Over Start!');}
- }
- render();
-}
-function resetAll(){ if(confirm('پورا میچ Reset کرنا ہے؟')){localStorage.removeItem('cric11_fixed_v5');location.reload();} }
-if(d.ball>0 || d.sc>0){document.getElementById('p1').style.display='none';document.getElementById('p4').style.display='block';render();}
-</script></body></html>
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PISHIN LIVE - Final</title>
-<style>body{font-family:Arial;background:#f1f5f9;margin:0}.header{background:#1e3a8a;color:#fff;padding:14px;text-align:center;font-weight:900}.card{background:#fff;margin:10px;border-radius:12px;padding:14px;box-shadow:0 2px 6px #0001} input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #cbd5e1} .row{display:flex;gap:8px}.btn{flex:1;padding:14px;border:0;border-radius:30px;font-weight:900}.scoreBtn{width:72px;height:72px;border-radius:50%;border:0;font-weight:900;font-size:18px;margin:5px}.green{background:#16a34a;color:#fff}.yellow{background:#facc15;color:#000}.red{background:#dc2626;color:#fff}.b{background:#1e3a8a;color:#fff}</style></head><body>
-<div class="header">🏏 PISHIN LIVE - Cric11</div>
-<div id="p1" class="card"><label>HOST TEAM</label><input id="t1" value="Shaheen Club"><label>VISITOR TEAM</label><input id="t2" value="B Z G CLUB"><label>OVERS</label><div class="row"><button class="btn" onclick="ch('ov',-1)">-</button><input id="ov" value="1" style="text-align:center"><button class="btn" onclick="ch('ov',1)">+</button></div><label>PLAYERS</label><div class="row"><button class="btn" onclick="ch('pl',-1)">-</button><input id="pl" value="11" style="text-align:center"><button class="btn" onclick="ch('pl',1)">+</button></div><button class="btn b" style="width:100%" onclick="goToss()">Next - Toss</button></div>
-<div id="p2" class="card" style="display:none"><h3>TOSS</h3><label>Who won toss?</label><select id="tossWon"></select><label>Elected</label><select id="elected"><option>Bat</option><option>Bowl</option></select><button class="btn b" style="width:100%" onclick="startM()">Start Match</button></div>
-<div id="p3" class="card" style="display:none"><input id="s1" placeholder="Striker" value="Waqas"><input id="s2" placeholder="Non-Striker" value="Khalid"><input id="bw" placeholder="Bowler" value="M Tanveer"><button class="btn b" style="width:100%" onclick="startS()">Start Scoring</button></div>
-<div id="p4" style="display:none"><div class="card"><div id="mainScore" style="font-size:28px;font-weight:900;text-align:center">0/0 (0.0/1)</div><div id="need" style="text-align:center;color:#1e3a8a;font-weight:900;margin-top:4px"></div><div id="overInfo" style="font-size:12px;color:#64748b;margin-top:8px"></div></div>
-<div class="card" style="text-align:center"><div><button class="scoreBtn green" onclick="run(0)">0</button><button class="scoreBtn green" onclick="run(1)">1</button><button class="scoreBtn green" onclick="run(2)">2</button><button class="scoreBtn yellow" onclick="undo()">UNDO</button></div><div><button class="scoreBtn green" onclick="run(3)">3</button><button class="scoreBtn green" onclick="run(4)">4</button><button class="scoreBtn green" onclick="run(6)">6</button><button class="scoreBtn yellow" onclick="swap()">SWAP</button></div><div><button class="scoreBtn yellow" onclick="wide()">WD</button><button class="scoreBtn yellow" onclick="noBall()">NB</button><button class="scoreBtn yellow" onclick="extra('LB')">LB</button><button class="scoreBtn yellow" onclick="extra('BYE')">BYE</button></div><div><button class="scoreBtn red" style="width:120px" onclick="wicket()">OUT</button></div><button class="btn b" style="width:100%;margin-top:12px" onclick="endIn()">End Innings</button><button class="btn" style="width:100%;margin-top:8px;background:#000;color:#fff" onclick="resetAll()">RESET</button></div></div>
-<script>
-let history=[];
-let d=JSON.parse(localStorage.getItem('cric11_final_v7')||'{"sc":0,"wk":0,"ball":0,"over":[],"tOvers":1,"tPlayers":11,"innings":1,"target":0,"t1":"Shaheen","t2":"BZG","s1":{"n":"Waqas","r":0,"b":0},"s2":{"n":"Khalid","r":0,"b":0}}');
-function ch(id,delta){let el=document.getElementById(id);let v=parseInt(el.value)||1;v+=delta;if(v<1)v=1;if(id=='ov'&&v>50)v=50;if(id=='pl'&&v>28)v=28;el.value=v}
-function goToss(){d.t1=document.getElementById('t1').value||'Team A';d.t2=document.getElementById('t2').value||'Team B';d.tOvers=parseInt(document.getElementById('ov').value);d.tPlayers=parseInt(document.getElementById('pl').value);document.getElementById('tossWon').innerHTML='<option>'+d.t1+'</option><option>'+d.t2+'</option>';document.getElementById('p1').style.display='none';document.getElementById('p2').style.display='block'}
-function startM(){d.tossWon=document.getElementById('tossWon').value;d.elected=document.getElementById('elected').value;document.getElementById('p2').style.display='none';document.getElementById('p3').style.display='block'}
-function startS(){d.s1.n=document.getElementById('s1').value||'Waqas';d.s2.n=document.getElementById('s2').value||'Khalid';d.bowler=document.getElementById('bw').value||'Bowler';d.sc=0;d.wk=0;d.ball=0;d.over=[];d.target=0;d.innings=1;history=[];document.getElementById('p3').style.display='none';document.getElementById('p4').style.display='block';render()}
-function save(){history.push(JSON.stringify(d));if(history.length>30)history.shift();}
-function render(){
- let ov=Math.floor(d.ball/6)+'.'+(d.ball%6);
- if(d.ball>=d.tOvers*6) ov=d.tOvers+'.0';
- document.getElementById('mainScore').innerText=d.sc+'/'+d.wk+' ('+ov+'/'+d.tOvers+')';
- if(d.innings==1){
-   if(d.ball>=d.tOvers*6) document.getElementById('need').innerText='Innings Complete! End Innings دبائیں';
-   else document.getElementById('need').innerText='1st Innings';
- } else {
-   let need=d.target-d.sc; let balls=(d.tOvers*6)-d.ball;
-   if(need<=0) document.getElementById('need').innerText='Match Won! 🎉';
-   else if(balls<=0) document.getElementById('need').innerText='Match Over';
-   else document.getElementById('need').innerText='Need '+need+' in '+balls+' balls';
- }
- document.getElementById('overInfo').innerText='This Over: '+d.over.join(' ')+' | '+d.s1.n+' '+d.s1.r+'('+d.s1.b+') - '+d.s2.n+' '+d.s2.r+'('+d.s2.b+')';
- localStorage.setItem('cric11_final_v7',JSON.stringify(d));
- localStorage.setItem('live_score',JSON.stringify({sc:d.sc,wk:d.wk,ball:d.ball,over:ov,totalOvers:d.tOvers,teams:d.t1+' VS '+d.t2,need:document.getElementById('need').innerText,thisOver:d.over,striker:d.s1}));
-}
-function run(r){
- if(d.ball>=d.tOvers*6){alert('اوور ختم! End Innings دبائیں');return;}
- if(d.wk>=d.tPlayers-1){alert('All Out!');return;}
- save(); d.sc+=r; d.ball++; d.over.push(r); d.s1.r+=r; d.s1.b++; if(r%2==1){let t=d.s1;d.s1=d.s2;d.s2=t} render();
-}
-function wide(){
- if(d.ball>=d.tOvers*6){alert('اوور ختم');return;}
- save();
- let ex=parseInt(prompt('Wide par kitne runs? 0=Sirf 1 run, 4=Four (Total 5 runs)')||'0');
- if(isNaN(ex)) ex=0;
- let total=1+ex; d.sc+=total;
- d.over.push(ex==0?'WD':'WD'+ex);
- if(ex%2==1){let t=d.s1;d.s1=d.s2;d.s2=t;}
- render();
-}
-function noBall(){
- if(d.ball>=d.tOvers*6){alert('اوور ختم');return;}
- save();
- let bat=parseInt(prompt('No Ball par bat se kitne? 0=Sirf 1 run, 4=Four (Total 5), 6=Six (Total 7)')||'0');
- if(isNaN(bat)) bat=0;
- let total=1+bat; d.sc+=total; d.s1.r+=bat; d.s1.b++;
- d.over.push(bat==0?'NB':'NB'+bat);
- if(bat%2==1){let t=d.s1;d.s1=d.s2;d.s2=t;}
- render();
-}
-function extra(t){ if(d.ball>=d.tOvers*6){alert('اوور ختم');return;} save(); d.sc+=1; d.ball++; d.over.push(t); d.s1.b++; render(); }
-function wicket(){ if(d.ball>=d.tOvers*6){alert('اوور ختم');return;} let nb=prompt('New Batsman Name?'); if(!nb) return; save(); d.wk++; d.ball++; d.over.push('W'); d.s1={n:nb,r:0,b:0}; render(); }
-function swap(){save(); let t=d.s1;d.s1=d.s2;d.s2=t; render();}
-function undo(){ if(history.length==0){alert('Undo nahi hai');return;} d=JSON.parse(history.pop()); render(); }
-function endIn(){ if(d.innings==1){d.target=d.sc+1; d.innings=2; d.sc=0; d.wk=0; d.ball=0; d.over=[]; alert('2nd Innings Target '+d.target); history=[];} else {if(confirm('Super Over?')){d.tOvers=1;d.sc=0;d.wk=0;d.ball=0;d.over=[];}} render();}
-function resetAll(){if(confirm('Reset?')){localStorage.removeItem('cric11_final_v7');location.reload();}}
-if(d.ball>0||d.sc>0){document.getElementById('p1').style.display='none';document.getElementById('p4').style.display='block';render();}
-</script></body></html>
+update();
+</script>
+</body>
+</html>
